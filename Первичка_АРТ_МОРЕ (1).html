@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>АРТ МОРЕ — Первичная документация</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:    #0f2744;
+    --blue:    #1a4a8a;
+    --mid:     #2563b0;
+    --sky:     #3b82cc;
+    --pale:    #dbeafe;
+    --ice:     #f0f7ff;
+    --white:   #ffffff;
+    --text:    #0f2744;
+    --muted:   #5a7a9e;
+    --border:  #c7dbf0;
+    --green:   #059669;
+    --green-bg:#d1fae5;
+    --amber:   #d97706;
+    --amber-bg:#fef3c7;
+    --red:     #dc2626;
+    --red-bg:  #fee2e2;
+    --shadow:  0 4px 24px rgba(15,39,68,.10);
+    --shadow-lg:0 8px 48px rgba(15,39,68,.16);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Onest', sans-serif;
+    background: var(--ice);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── top bar ── */
+  .topbar {
+    background: var(--navy);
+    padding: 0 32px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,.25);
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--white);
+  }
+  .topbar-logo {
+    width: 32px; height: 32px;
+    background: var(--sky);
+    border-radius: 8px;
+    display: flex; align-items:center; justify-content:center;
+    font-weight: 700; font-size: 14px; color: #fff;
+    letter-spacing: -.5px;
+  }
+  .topbar-title { font-size: 15px; font-weight: 600; letter-spacing: -.2px; }
+  .topbar-sub   { font-size: 12px; color: #8ab4d8; font-weight: 400; }
+  .topbar-right {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: #8ab4d8;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .badge-date {
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    padding: 4px 10px; border-radius: 6px;
+    color: #cbd5e1; font-size: 11px;
+  }
+
+  /* ── layout ── */
+  .main { max-width: 1320px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  /* ── stat cards ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp .4s ease both;
+  }
+  .stat-card::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:3px;
+    background: linear-gradient(90deg, var(--blue), var(--sky));
+  }
+  .stat-card.grand::before { background: linear-gradient(90deg, var(--navy), var(--blue)); }
+  .stat-label  { font-size:11px; color:var(--muted); font-weight:500; text-transform:uppercase; letter-spacing:.6px; margin-bottom:6px; }
+  .stat-value  { font-size:22px; font-weight:700; color:var(--navy); letter-spacing:-.5px; font-family:'JetBrains Mono', monospace; }
+  .stat-value.money::after { content:'₽'; font-size:14px; color:var(--muted); margin-left:4px; font-family:'Onest',sans-serif; }
+  .stat-icon   { position:absolute; right:16px; top:16px; font-size:22px; opacity:.18; }
+
+  /* ── toolbar ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .toolbar-left  { display:flex; gap:8px; align-items:center; flex:1; flex-wrap:wrap; }
+  .toolbar-right { display:flex; gap:8px; align-items:center; }
+
+  .search-wrap {
+    position: relative;
+    flex: 1; min-width: 220px; max-width: 360px;
+  }
+  .search-wrap svg {
+    position:absolute; left:11px; top:50%; transform:translateY(-50%);
+    color:var(--muted); pointer-events:none;
+  }
+  input[type=search], select {
+    font-family:'Onest',sans-serif;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 9px 12px 9px 36px;
+    background: var(--white);
+    color: var(--text);
+    outline: none;
+    width: 100%;
+    transition: border .15s, box-shadow .15s;
+  }
+  input[type=search]:focus, select:focus {
+    border-color: var(--sky);
+    box-shadow: 0 0 0 3px rgba(59,130,204,.15);
+  }
+  select { padding-left: 12px; cursor:pointer; }
+
+  .btn {
+    font-family:'Onest',sans-serif;
+    font-size: 13px; font-weight: 500;
+    padding: 9px 16px; border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--text);
+    cursor: pointer;
+    display: flex; align-items:center; gap:6px;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .btn:hover { background:var(--pale); border-color:var(--sky); }
+  .btn.primary { background:var(--blue); color:#fff; border-color:var(--blue); }
+  .btn.primary:hover { background:var(--navy); border-color:var(--navy); }
+
+  /* ── group section ── */
+  .group-section {
+    margin-bottom: 22px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    animation: fadeUp .45s ease both;
+  }
+  .group-header {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--mid) 100%);
+    padding: 13px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+  .group-header:hover { filter: brightness(1.07); }
+  .group-person {
+    display: flex; align-items:center; gap:10px;
+    color: #fff; font-weight: 600; font-size: 14px;
+  }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(255,255,255,.2);
+    display:flex; align-items:center; justify-content:center;
+    font-size: 12px; font-weight: 700; color:#fff;
+    flex-shrink:0;
+  }
+  .group-meta {
+    display:flex; align-items:center; gap:10px;
+  }
+  .group-count {
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.25);
+    color:#fff; font-size:11px; font-weight:500;
+    padding:3px 9px; border-radius:20px;
+  }
+  .group-sum {
+    color:#fff; font-family:'JetBrains Mono',monospace;
+    font-size:14px; font-weight:500;
+  }
+  .chevron { color:#fff; transition:transform .2s; font-size:16px; }
+  .chevron.open { transform:rotate(180deg); }
+
+  /* ── table ── */
+  .table-wrap { overflow-x:auto; background:var(--white); }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  thead th {
+    background: var(--navy);
+    color: #b8d0ec;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    white-space: nowrap;
+  }
+  thead th:first-child { width:48px; text-align:center; }
+  thead th.num { text-align:right; }
+
+  tbody tr { border-bottom:1px solid var(--border); transition:background .12s; }
+  tbody tr:hover { background:var(--ice); }
+  tbody tr:last-child { border-bottom:none; }
+  tbody td { padding:11px 14px; vertical-align:top; }
+  tbody td:first-child { text-align:center; color:var(--muted); font-size:12px; font-family:'JetBrains Mono',monospace; }
+  .td-org  { font-weight:500; color:var(--navy); }
+  .td-date { color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:12px; white-space:nowrap; }
+  .td-sum  { text-align:right; font-family:'JetBrains Mono',monospace; font-weight:600; color:var(--navy); white-space:nowrap; }
+  .td-comment { color:#4a6785; font-size:12px; line-height:1.5; max-width:360px; }
+
+  /* ── subtotal row ── */
+  .subtotal-row td {
+    background: var(--pale);
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--blue);
+    padding: 9px 14px;
+    border-top: 2px solid var(--sky);
+  }
+  .subtotal-row .td-label { text-align:right; color:var(--muted); font-weight:400; }
+  .subtotal-row .td-sum   { color:var(--blue); font-family:'JetBrains Mono',monospace; font-size:13px; }
+
+  /* ── grand total ── */
+  .grand-total {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    box-shadow: var(--shadow-lg);
+    animation: fadeUp .5s ease both;
+  }
+  .grand-total-label { color:#8ab4d8; font-size:13px; font-weight:500; text-transform:uppercase; letter-spacing:.8px; }
+  .grand-total-value { color:#fff; font-family:'JetBrains Mono',monospace; font-size:26px; font-weight:700; letter-spacing:-1px; }
+  .grand-total-value span { font-size:16px; color:#8ab4d8; margin-left:4px; font-family:'Onest',sans-serif; }
+
+  /* ── empty state ── */
+  .empty { text-align:center; padding:40px; color:var(--muted); font-size:14px; background:var(--white); }
+
+  /* ── status pill ── */
+  .pill {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 9px; border-radius:20px;
+    font-size:11px; font-weight:500;
+  }
+  .pill.pending { background:var(--amber-bg); color:var(--amber); }
+  .pill.done    { background:var(--green-bg); color:var(--green); }
+
+  /* ── animations ── */
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(12px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .group-section:nth-child(1) { animation-delay:.05s; }
+  .group-section:nth-child(2) { animation-delay:.10s; }
+  .group-section:nth-child(3) { animation-delay:.15s; }
+  .group-section:nth-child(4) { animation-delay:.20s; }
+  .group-section:nth-child(5) { animation-delay:.25s; }
+  .group-section:nth-child(6) { animation-delay:.30s; }
+
+  /* ── collapse ── */
+  .group-body { overflow:hidden; transition:max-height .3s ease; }
+  .group-body.collapsed { max-height:0 !important; }
+
+  @media (max-width:640px) {
+    .topbar { padding:0 16px; }
+    .main   { padding:16px 12px 48px; }
+    .td-comment { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">АМ</div>
+    <div>
+      <div class="topbar-title">АРТ МОРЕ</div>
+      <div class="topbar-sub">Первичная документация</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="badge-date" id="today-date"></span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- stats -->
+  <div class="stats-row" id="stats-row"></div>
+
+  <!-- toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="search" id="search" placeholder="Поиск по организации, комментарию…">
+      </div>
+      <select id="filter-person">
+        <option value="">Все ответственные</option>
+      </select>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn" onclick="expandAll()">⊞ Развернуть все</button>
+      <button class="btn" onclick="collapseAll()">⊟ Свернуть все</button>
+    </div>
+  </div>
+
+  <!-- groups container -->
+  <div id="groups-container"></div>
+
+  <!-- grand total -->
+  <div class="grand-total" id="grand-total">
+    <div class="grand-total-label">Общий итог</div>
+    <div class="grand-total-value" id="grand-val">–<span>₽</span></div>
+  </div>
+
+</div>
+
+<script>
+const DATA = [
+  { org:'ИП Бабарыка А.С.',          date:'01.07.2025', sum:80000,    person:'Богач. Е.',      comment:'Организация и проведение инспекционного контроля по ранее выданным документам № ЕАЭС RU С-CN.НК16.В.00317/24' },
+  { org:'ИП Бабруев А.В.',            date:'17.02.2026', sum:55000,    person:'Богач. Е.',      comment:'За услугу проведения тренинга "Тигры маркетплейсов"' },
+  { org:'ИП Бабруев А.В.',            date:'17.02.2026', sum:75000,    person:'Богач. Е.',      comment:'За услугу проведения мастермайнда.' },
+  { org:'ИП Бабруев А.В.',            date:'17.03.2026', sum:100000,   person:'Богач. Е.',      comment:'За услугу проведения мастермайнда.' },
+  { org:'ИП Козырев А.С.',            date:'05.03.2026', sum:13000,    person:'Жоров В.',       comment:'Предоставление доступа к Системе10Х WB' },
+  { org:'ИП Панфилов С.А.',           date:'06.03.2026', sum:8000,     person:'Решетникова Д.', comment:'Оплата интенсива Viral & Science Challenge' },
+  { org:'ИП Фионов К.В.',             date:'23.01.2026', sum:40000,    person:'Жоров В.',       comment:'Авансовый платеж' },
+  { org:'ООО "МАКСИМУМ ВЕБ"',         date:'13.02.2026', sum:31800,    person:'Гревцева Д.',    comment:'Лицензия на программу ПланФакт' },
+  { org:'ООО "МАРПЛА"',               date:'04.03.2026', sum:10000,    person:'Жоров В.',       comment:'Пополнение ЛК ООО Арт Море для проведения рекламных тестов' },
+  { org:'ООО "РИТЕЙЛ РОКЕТ"',         date:'10.03.2026', sum:30000,    person:'Пятов Е.',       comment:'Авансовый платеж по договору возмездного оказания услуг №РД-05032026/440 от 05.03.2026' },
+  { org:'ООО "СИНТЭКС ИИ"',           date:'13.03.2026', sum:22743,    person:'Соколова В.',    comment:'Право предоставления доступа к платформе SYNTX AI' },
+  { org:'ООО "ТОРГСТАТ"',             date:'04.03.2026', sum:3990,     person:'Жоров В.',       comment:'Тариф Селлер Wildberries' },
+  { org:'ООО "ЯНДЕКС 360 ДЛЯ БИЗНЕСА"', date:'17.03.2026', sum:10032, person:'Гревцева Д.',    comment:'Предоставление прав использования сервиса "Яндекс 360 для бизнеса"' },
+];
+
+function fmt(n) {
+  return n.toLocaleString('ru-RU', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
+function initials(name) {
+  return name.split(/[\s.]+/).filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+}
+
+// ── today date ──────────────────────────────────────────────────
+const d = new Date();
+document.getElementById('today-date').textContent =
+  d.toLocaleDateString('ru-RU',{day:'2-digit',month:'long',year:'numeric'});
+
+// ── persons list sorted by total ────────────────────────────────
+const personTotals = {};
+DATA.forEach(r => { personTotals[r.person] = (personTotals[r.person]||0) + r.sum; });
+const PERSONS = Object.entries(personTotals).sort((a,b)=>b[1]-a[1]).map(e=>e[0]);
+
+// ── populate filter ──────────────────────────────────────────────
+const filterSel = document.getElementById('filter-person');
+PERSONS.forEach(p => {
+  const o = document.createElement('option'); o.value=p; o.textContent=p;
+  filterSel.appendChild(o);
+});
+
+// ── stats cards ──────────────────────────────────────────────────
+function renderStats(rows) {
+  const total  = rows.reduce((s,r)=>s+r.sum, 0);
+  const counts = {};
+  rows.forEach(r=>{ counts[r.person]=(counts[r.person]||0)+1; });
+  const statsRow = document.getElementById('stats-row');
+  statsRow.innerHTML = `
+    <div class="stat-card grand">
+      <div class="stat-label">Общая сумма</div>
+      <div class="stat-value money">${fmt(total)}</div>
+      <div class="stat-icon">💰</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Всего платежей</div>
+      <div class="stat-value">${rows.length}</div>
+      <div class="stat-icon">📄</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ответственных лиц</div>
+      <div class="stat-value">${Object.keys(counts).length}</div>
+      <div class="stat-icon">👥</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Средний платёж</div>
+      <div class="stat-value money">${rows.length ? fmt(total/rows.length) : '0'}</div>
+      <div class="stat-icon">📊</div>
+    </div>
+  `;
+  document.getElementById('grand-val').innerHTML = fmt(total)+'<span>₽</span>';
+}
+
+// ── render main ──────────────────────────────────────────────────
+function render(rows) {
+  renderStats(rows);
+  const container = document.getElementById('groups-container');
+  container.innerHTML = '';
+
+  const byPerson = {};
+  PERSONS.forEach(p => { byPerson[p] = []; });
+  rows.forEach(r => {
+    if (!byPerson[r.person]) byPerson[r.person] = [];
+    byPerson[r.person].push(r);
+  });
+
+  let shown = 0;
+  PERSONS.forEach(person => {
+    const group = byPerson[person];
+    if (!group || group.length === 0) return;
+    shown++;
+
+    const subtotal = group.reduce((s,r)=>s+r.sum,0);
+    const sec = document.createElement('div');
+    sec.className = 'group-section';
+    sec.dataset.person = person;
+
+    const bodyId = `body-${person.replace(/[\s.]/g,'_')}`;
+
+    sec.innerHTML = `
+      <div class="group-header" onclick="toggleGroup('${bodyId}',this)">
+        <div class="group-person">
+          <div class="avatar">${initials(person)}</div>
+          ${person}
+        </div>
+        <div class="group-meta">
+          <span class="group-count">${group.length} позиц${group.length===1?'ия':group.length<5?'ии':'ий'}</span>
+          <span class="group-sum">${fmt(subtotal)} ₽</span>
+          <span class="chevron open" id="chev-${bodyId}">▾</span>
+        </div>
+      </div>
+      <div class="group-body" id="${bodyId}" style="max-height:2000px">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>Организация</th>
+                <th>Дата оплаты</th>
+                <th class="num">Сумма, ₽</th>
+                <th>Комментарий / Назначение платежа</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${group.map((r,i)=>`
+                <tr>
+                  <td>${i+1}</td>
+                  <td class="td-org">${r.org}</td>
+                  <td class="td-date">${r.date}</td>
+                  <td class="td-sum">${fmt(r.sum)}</td>
+                  <td class="td-comment">${r.comment}</td>
+                </tr>
+              `).join('')}
+              <tr class="subtotal-row">
+                <td colspan="3" class="td-label">Итого по ${person}:</td>
+                <td class="td-sum">${fmt(subtotal)}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+    container.appendChild(sec);
+  });
+
+  if (shown === 0) {
+    container.innerHTML = '<div class="empty">Нет данных, соответствующих фильтру</div>';
+  }
+}
+
+function toggleGroup(bodyId, header) {
+  const body = document.getElementById(bodyId);
+  const chev = document.getElementById('chev-'+bodyId);
+  const isOpen = !body.classList.contains('collapsed');
+  if (isOpen) {
+    body.style.maxHeight = body.scrollHeight+'px';
+    requestAnimationFrame(()=>{ body.classList.add('collapsed'); });
+    chev.classList.remove('open');
+  } else {
+    body.classList.remove('collapsed');
+    body.style.maxHeight = '2000px';
+    chev.classList.add('open');
+  }
+}
+
+function expandAll() {
+  document.querySelectorAll('.group-body').forEach(b=>{
+    b.classList.remove('collapsed');
+    b.style.maxHeight='2000px';
+  });
+  document.querySelectorAll('.chevron').forEach(c=>c.classList.add('open'));
+}
+function collapseAll() {
+  document.querySelectorAll('.group-body').forEach(b=>{
+    b.style.maxHeight=b.scrollHeight+'px';
+    requestAnimationFrame(()=>b.classList.add('collapsed'));
+  });
+  document.querySelectorAll('.chevron').forEach(c=>c.classList.remove('open'));
+}
+
+// ── filter logic ─────────────────────────────────────────────────
+function getFiltered() {
+  const q      = document.getElementById('search').value.toLowerCase().trim();
+  const person = document.getElementById('filter-person').value;
+  return DATA.filter(r => {
+    if (person && r.person !== person) return false;
+    if (q) {
+      const hay = (r.org+' '+r.comment+' '+r.person).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+document.getElementById('search').addEventListener('input', ()=>render(getFiltered()));
+document.getElementById('filter-person').addEventListener('change', ()=>render(getFiltered()));
+
+// ── init ─────────────────────────────────────────────────────────
+render(DATA);
+</script>
+</body>
+</html>
